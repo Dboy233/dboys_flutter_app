@@ -17,7 +17,7 @@ class HomePage extends GetView<HomeLogic> {
       'images/img_deveper_cover.png',
       'images/icon_deveper.jpg',
       '开发者',
-      Uri.parse('https://github.com/Dboy233'),
+      Uri.parse('https://github.com/Dboy233/dboys_flutter_app'),
       null,
     ),
     //Pexels
