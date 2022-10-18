@@ -1,0 +1,131 @@
+import 'package:dboy_flutter_app/net/net_state.dart';
+import 'package:dboy_flutter_app/net/pexels/pexels_api.dart';
+import 'package:dboy_flutter_app/net/pexels/pexels_net_config.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+class PexelsPhotoLogic extends GetxController {
+  ///图片列表
+  final photoList = [];
+  final String photoListNotifyId = "photoList";
+
+  //下一页网络请求地址
+  String? nextPage = null;
+
+  //网路操作取消token
+  CancelToken? _cancelTokenPhoto;
+
+  //下载取消token
+  CancelToken? _cancelTokenDownload;
+
+  ///下载状态 true正在下载；false下载结束。
+  var _isDownload = false;
+
+  ///判断是否正在加载数据，放置重复加载
+  var _isLoading = false;
+
+  @override
+  void onReady() {
+    //加载精选照片,当逻辑层第一次加载的时候请求第一页
+    loadPhoto(urlPath: getPexelsPhotosFirstPage());
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    _cancelTokenPhoto?.cancel('逻辑层被销毁');
+    super.onClose();
+  }
+
+  ///加载图片
+   Future<String?> loadPhoto({String? urlPath}) async {
+    if (_isLoading) {
+      return"正在加载更多，请稍后。。。";
+    }
+    _isLoading = true;
+    //判断url
+    String? url = urlPath ?? nextPage;
+    if (url == null) {
+      return "没有请求地址";
+    }
+    _cancelTokenPhoto = CancelToken();
+    var request = await PexelsApi.getPictureListForUrl(urlPath ?? nextPage!,
+        cancel: _cancelTokenPhoto);
+    _isLoading = false;
+    if (request.netState == NetState.success) {
+      nextPage = request.data!.nextPage;
+      photoList.addAll(request.data!.photos);
+      update([photoListNotifyId]);
+      return null;
+    } else {
+      if (isClosed) {
+        return null;
+      }
+      return "请求数据失败了";
+    }
+
+  }
+
+  ///下载图片
+  ///[saveName] 图片保存的名字
+  ///[downloadUrl] 图片下载地址
+  Future<String> downloadPhoto(String? saveName, String? downloadUrl) async {
+    if (_isDownload) return "正在下载中...";
+    _isDownload = true;
+    if (saveName == null || saveName.isEmpty == true) {
+      _isDownload = false;
+      return "文件名称错误~";
+    }
+    if (downloadUrl == null || downloadUrl.isEmpty) {
+      _isDownload = false;
+      return "下载地址获取失败~";
+    }
+    //权限申请
+    if (GetPlatform.isIOS) {
+      var permission = await Permission.photos.status;
+      if (permission.isDenied) {
+        //申请权限，如果被拒绝了提示
+        var requestPermission = await Permission.photos.request();
+        if (requestPermission.isDenied) {
+          _isDownload = false;
+          return "没有权限,请开启访问相册权限～";
+        }
+      }
+    } else if (GetPlatform.isAndroid) {
+      var permission = await Permission.storage.status;
+      if (permission.isDenied) {
+        var requestPermission = await Permission.storage.request();
+        if (requestPermission.isDenied) {
+          _isDownload = false;
+          return "没有权限,请开启读写权限～";
+        }
+      }
+    }
+
+    //创建取消下载token
+    _cancelTokenDownload = CancelToken();
+
+    //开始下载
+    var result = await PexelsApi.downloadPhoto(
+        saveName, downloadUrl, _cancelTokenDownload!);
+
+    //修改下载状态
+    _isDownload = false;
+
+    // //这里做延迟是因为，上面修改状态后会通知关闭下载弹窗，
+    // //然而弹窗还没有关闭前，下面的提示bar显示了。
+    // //这就导致Getx进行关闭的时候，监测到对后弹出的是Snackbar,就把SnackBar关闭了
+    // //导致弹窗无法关闭，调用手动取消的时候也出现了问题。所以加个延迟确保
+    // //下载弹窗已经被关闭。
+    // //todo:有待优化
+    // await Future.delayed(const Duration(milliseconds: 200));
+
+    //通过结果判断弹出提示
+    if (result) {
+      return "保存成功";
+    } else {
+      return "保存失败了";
+    }
+  }
+}
