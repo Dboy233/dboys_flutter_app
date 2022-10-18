@@ -2,8 +2,13 @@ import 'package:dboy_flutter_app/page/pexels/binding.dart';
 import 'package:dboy_flutter_app/page/pexels/page/watch/binding.dart';
 import 'package:dboy_flutter_app/page/pexels/page/watch/view.dart';
 import 'package:dboy_flutter_app/page/pexels/view.dart';
-import 'package:dboy_flutter_app/page/scanner/binding.dart';
-import 'package:dboy_flutter_app/page/scanner/view.dart';
+import 'package:dboy_flutter_app/page/qr/binding.dart';
+import 'package:dboy_flutter_app/page/qr/middlewares/permission_middlewares.dart';
+import 'package:dboy_flutter_app/page/qr/page/qr_create/binding.dart';
+import 'package:dboy_flutter_app/page/qr/page/qr_create/view.dart';
+import 'package:dboy_flutter_app/page/qr/page/qr_history/binding.dart';
+import 'package:dboy_flutter_app/page/qr/page/qr_history/view.dart';
+import 'package:dboy_flutter_app/page/qr/view.dart';
 import 'package:get/get.dart';
 
 import '../page/home/binding.dart';
@@ -33,10 +38,22 @@ class AppPages {
           ],
         ),
         GetPage(
-          name: _Paths.scanner,
-          binding: ScannerBinding(),
-          page: () => ScannerPage(),
-        )
+            name: _Paths.qr,
+            middlewares: [PermissionMiddl()],
+            binding: QrBinding(),
+            page: () => QrPage(),
+            children: [
+              GetPage(
+                name: _Paths.qr_create,
+                binding: QrCreateBinding(),
+                page: () => const QrCreatePage(),
+              ),
+              GetPage(
+                name: _Paths.qr_history,
+                binding: QrHistoryBinding(),
+                page: () => const QrHistoryPage(),
+              )
+            ])
       ],
     )
   ];

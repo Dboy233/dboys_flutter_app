@@ -33,15 +33,15 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-#  #路由管理框架
-#  go_router: ^5.0.5
   #状态管理框架
   get: ^4.6.5
   # 屏幕适配框架
   flutter_screenutil: ^5.5.4
+  #本地存储
+  mmkv: ^1.2.15
   #本地数据库
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  objectbox: ^1.6.2
+  objectbox_flutter_libs: ^1.6.2
   #打开网站
   url_launcher: ^6.1.6
   #网络
@@ -55,17 +55,21 @@ dependencies:
   #视频播放器
   video_player: ^2.4.7
   chewie: ^1.3.5
-
+  #扫码
+  mobile_scanner: ^2.0.0
+  #生成二维码
+  qr: ^3.0.1
+  async: ^2.9.0
+  #可视区域检测
+  visibility_detector: ^0.3.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.3.2
+  #bojectbox 数据库生成器
+  objectbox_generator: ^1.6.2
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the

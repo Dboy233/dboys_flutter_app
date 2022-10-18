@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 ///如果 传入[width]则返回缩放后的height高度
 ///如果 传入[height]则返回缩放后的width宽度
@@ -13,4 +16,23 @@ double zoom(int orgWidth, int orgHeight,
     return (height / orgHeight) * orgWidth;
   }
   return 0;
+}
+
+///随机颜色方法
+Color randomColor({
+  bool randomA = false, //是否随机透明度
+  bool randomR = true, //是否随机R通道
+  bool randomG = true, //是否随机G通道
+  bool randomB = true, //是否随机B通道
+  int minA = 100, //A通道最小随机值
+  int minR = 100, //R通道最小随机值
+  int minG = 100, //G通道最小随机值
+  int minB = 100, //B通道最小随机值
+}) {
+  var random = Random();
+  int r = randomR ? (255 - random.nextInt(255 - minR)) : 255;
+  int g = randomG ? (255 - random.nextInt(255 - minG)) : 255;
+  int b = randomB ? (255 - random.nextInt(255 - minB)) : 255;
+  int a = randomA ? (255 - random.nextInt(255 - minA)) : 255;
+  return Color.fromARGB(a, r, g, b);
 }

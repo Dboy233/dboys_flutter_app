@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:get/get.dart';
+import 'package:mmkv/mmkv.dart';
 
 ///本地数据持久化工具 抽象类
 abstract class LocalData {
@@ -8,7 +7,7 @@ abstract class LocalData {
   static LocalData? _default;
 
   static LocalData get() {
-    return _default ??= _LocalDataHive();
+    return _default ??= _LocalDataMMKv();
   }
 
   ///初始化
@@ -21,109 +20,82 @@ abstract class LocalData {
   Future<dynamic> putData(String key, dynamic value);
 
   ///获取数据
-  Future<S?> getData<S>(String key, {S defValue});
+  Future<S?> getData<S>(String key, {S? defValue});
 
   ///删除数据
   Future<bool> delete(String key);
 }
 
-///使用前要确保 Hive 数据库已经初始化
-class _LocalDataHive extends LocalData {
-  Box? _box;
+class _LocalDataMMKv extends LocalData {
+  MMKV? mmkv;
 
   @override
   Future init() async {
-    _box = await Hive.openBox("local_data");
+    await MMKV.initialize();
+    mmkv = MMKV.defaultMMKV(cryptKey: "Dboy233");
+    return 'rootDir';
   }
 
   @override
-  Future<bool> containsKey(String key) async {
-    return _box?.containsKey(key) ?? false;
-  }
-
-  @override
-  Future<S?> getData<S>(String key, {S? defValue}) async {
-    var value = _box?.get(key, defaultValue: defValue);
-    if (value == null) return null;
-    if (value.runtimeType == S) {
-      if (kDebugMode) {
-        print("get data $key : $value");
+  Future<dynamic> putData(String key, value) {
+    return Future.sync(() {
+      assert(mmkv != null, "mmkv 还没初始化完成");
+      Get.log("本地存储-保存 key=$key value=$value");
+      switch (value.runtimeType) {
+        case int:
+          mmkv?.encodeInt(key, value);
+          break;
+        case String:
+          mmkv?.encodeString(key, value);
+          break;
+        case bool:
+          mmkv?.encodeBool(key, value);
+          break;
+        case double:
+          mmkv?.encodeDouble(key, value);
+          break;
       }
-      return value as S;
-    } else {
-      throw Exception("获取的data数据类型${value.runtimeType} 与 目标类型不一致 ${S}");
-    }
-  }
-
-  @override
-  Future putData(String key, value) async {
-    if (kDebugMode) {
-      print("put data ${key} : $value");
-    }
-    return _box?.put(key, value);
+    });
   }
 
   @override
   Future<bool> delete(String key) {
-    return _box?.delete(key).then<bool>((value) => true).catchError(
-          (error) async {
-            print("delete data error $error");
-          },
-          test: (error) => false,
-        ) ??
-        Future.value(false);
+    assert(mmkv != null, "mmkv 还没初始化完成");
+    return Future.sync(() {
+      mmkv?.removeValue(key);
+      return true;
+    });
+  }
+
+  @override
+  Future<bool> containsKey(String key) {
+    assert(mmkv != null, "mmkv 还没初始化完成");
+    return Future.sync(() => mmkv?.containsKey(key) ?? false);
+  }
+
+  @override
+  Future<S?> getData<S>(String key, {S? defValue}) {
+    return Future.sync(() {
+      S? result;
+      switch (S) {
+        case int:
+          result = mmkv?.decodeInt(key) as S?;
+          break;
+        case String:
+          result = mmkv?.decodeString(key) as S?;
+          break;
+        case bool:
+          result = mmkv?.decodeBool(key) as S?;
+          break;
+        case double:
+          result = mmkv?.decodeDouble(key) as S?;
+          break;
+        default:
+          result = null;
+          break;
+      }
+      Get.log("本地存储-获取 key=$key : value=$result");
+      return result ?? defValue;
+    });
   }
 }
-
-// @Deprecated("所依赖的 path_provider 有问题")
-// class _LocalDataMMKv extends LocalData {
-//   // MMKV? mmkv;
-//
-//   @override
-//   Future init() async {
-//     // final rootDir = await MMKV.initialize();
-//     // mmkv = MMKV.defaultMMKV();
-//
-//     return 'rootDir';
-//   }
-//
-//   @override
-//   Future<dynamic> putData(String key, value) async {
-//     print("put $key data $value");
-//     switch (value.runtimeType) {
-//       case int:
-//         break;
-//       case String:
-//         break;
-//       case bool:
-//         break;
-//       case double:
-//         break;
-//     }
-//   }
-//
-//   @override
-//   Future<S?> getData<S>(String key) async {
-//     switch (S) {
-//       case int:
-//         print("get $key data int ");
-//         break;
-//       case String:
-//         print("get $key data string ");
-//         break;
-//       case bool:
-//         print("get $key data bool ");
-//         break;
-//       case double:
-//         print("get $key data double ");
-//         break;
-//     }
-//     return null;
-//   }
-//
-//   @override
-//   delete(String kye) {
-//     // TODO: implement delete
-//     throw UnimplementedError();
-//   }
-// }

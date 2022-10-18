@@ -16,7 +16,7 @@ void main() async {
 
 ///服务初始化 SDK初始化
 frontInit() async {
-  await DataBase.get().init();
+  await DataBase.init();
   await LocalData.get().init();
 }
 

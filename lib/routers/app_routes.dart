@@ -16,7 +16,11 @@ abstract class Routes {
   //endregion
 
   //region  扫码
-  static const scanner = home+_Paths.scanner;
+  static const qr = home+_Paths.qr;
+
+  static const qr_history = qr+_Paths.qr_history;
+
+  static const qr_create = qr+_Paths.qr_create;
 
   //endregion
 
@@ -42,6 +46,9 @@ abstract class _Paths {
   static const pexels_video_watch = '/:id';
 
 
-  static const scanner ="/scanner";
+  static const qr ="/qr";
+  static const qr_history="/history";
+  static const qr_create="/create";
+
 
 }
