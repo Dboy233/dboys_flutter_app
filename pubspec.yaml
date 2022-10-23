@@ -58,10 +58,13 @@ dependencies:
   #扫码
   mobile_scanner: ^2.0.0
   #生成二维码
-  qr: ^3.0.1
+  qr_flutter: ^4.0.0
+  #异步框架
   async: ^2.9.0
   #可视区域检测
   visibility_detector: ^0.3.3
+  #将Widgetc转成Image
+  widgets_to_image: ^0.0.2
 
 dev_dependencies:
   flutter_test:

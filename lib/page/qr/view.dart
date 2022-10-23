@@ -230,7 +230,7 @@ class QrResultDialog extends GetView<QrLogic> {
           subtitle: Text("${qrData.date}"),
           trailing: IconButton(
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: qrData.data));
+              Clipboard.setData(ClipboardData(text: qrData.orgData));
               Get.showSnackbar(const GetSnackBar(
                 backgroundColor: Colors.blueAccent,
                 messageText: Text("复制成功"),
@@ -246,7 +246,7 @@ class QrResultDialog extends GetView<QrLogic> {
           padding: const EdgeInsets.only(left: 70, right: 24,bottom: 8),
           child: SizedBox(
             width: double.infinity,
-            child: Text("${qrData.data}"),
+            child: Text(qrData.orgData),
           ),
         )
       ],

@@ -36,11 +36,6 @@ final _entities = <ModelEntity>[
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 8685187033509064897),
-            name: 'data',
-            type: 9,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(4, 4683571720202739086),
             name: 'date',
             type: 10,
@@ -81,7 +76,7 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [8685187033509064897],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -98,11 +93,9 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (QrData object, fb.Builder fbb) {
           final orgDataOffset = fbb.writeString(object.orgData);
-          final dataOffset = fbb.writeString(object.data);
           fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, orgDataOffset);
-          fbb.addOffset(2, dataOffset);
           fbb.addInt64(3, object.date?.millisecondsSinceEpoch);
           fbb.addInt64(4, object.typeIndex);
           fbb.finish(fbb.endTable());
@@ -117,8 +110,6 @@ ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
             ..orgData = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 6, '')
-            ..data = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 8, '')
             ..date = dateValue == null
                 ? null
                 : DateTime.fromMillisecondsSinceEpoch(dateValue)
@@ -141,13 +132,10 @@ class QrData_ {
   static final orgData =
       QueryStringProperty<QrData>(_entities[0].properties[1]);
 
-  /// see [QrData.data]
-  static final data = QueryStringProperty<QrData>(_entities[0].properties[2]);
-
   /// see [QrData.date]
-  static final date = QueryIntegerProperty<QrData>(_entities[0].properties[3]);
+  static final date = QueryIntegerProperty<QrData>(_entities[0].properties[2]);
 
   /// see [QrData.typeIndex]
   static final typeIndex =
-      QueryIntegerProperty<QrData>(_entities[0].properties[4]);
+      QueryIntegerProperty<QrData>(_entities[0].properties[3]);
 }

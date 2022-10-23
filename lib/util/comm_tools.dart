@@ -1,6 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+//显示消息信息
+SnackbarController showMsg(String msg) {
+  return Get.showSnackbar(GetSnackBar(
+    backgroundColor: Colors.blue,
+    messageText: Text(
+      msg,
+      style: const TextStyle(color: Colors.white),
+    ),
+    duration: const Duration(seconds: 2),
+  ));
+}
 
 ///如果 传入[width]则返回缩放后的height高度
 ///如果 传入[height]则返回缩放后的width宽度
@@ -35,4 +48,13 @@ Color randomColor({
   int b = randomB ? (255 - random.nextInt(255 - minB)) : 255;
   int a = randomA ? (255 - random.nextInt(255 - minA)) : 255;
   return Color.fromARGB(a, r, g, b);
+}
+
+///取颜色的互补色
+Color repairColor(Color color) {
+  var alpha = color.alpha;
+  var red = color.red;
+  var green = color.green;
+  var blue = color.blue;
+  return Color.fromARGB(alpha, 255 - red, 255 - green, 255 - blue);
 }

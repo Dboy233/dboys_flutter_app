@@ -20,11 +20,6 @@
           "type": 9
         },
         {
-          "id": "3:8685187033509064897",
-          "name": "data",
-          "type": 9
-        },
-        {
           "id": "4:4683571720202739086",
           "name": "date",
           "type": 10
@@ -46,7 +41,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8685187033509064897
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

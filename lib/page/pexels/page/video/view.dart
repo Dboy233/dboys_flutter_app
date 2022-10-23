@@ -84,7 +84,7 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
                     openTap: () {
                       Get.log("打开页面");
                       var video = controller.videos[index];
-                      Get.toNamed(Routes.getPexelsVideoWatchUrl("${video.id}"));
+                      Get.toNamed(Routes.pexels_video_watch("${video.id}"));
                     },
                   );
                 },

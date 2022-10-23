@@ -21,7 +21,6 @@ class QrLogic extends GetxController {
     QrData qrData = QrData()..orgData = barcode.rawValue ?? "null";
     qrData.type = _checkType(barcode);
     qrData.orgData = barcode.rawValue ?? "null";
-    qrData.data = qrData.orgData;
     qrData.date = DateTime.now();
     //存数据库
     qrData.id = _box.put(qrData);

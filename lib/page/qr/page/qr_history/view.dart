@@ -1,5 +1,5 @@
 import 'package:dboy_flutter_app/database/bean/qr_data.dart';
-import 'package:dboy_flutter_app/util/comm_tools.dart';
+import 'package:dboy_flutter_app/page/qr/page/qr_details/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -79,12 +79,18 @@ class QrHistoryPage extends GetWidget<QrHistoryLogic> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ListTile(
-          leading: Icon(qrData.type.iconData,color: qrData.type.color),
-          title: Text("${qrData.type.name}"),
+          leading: Icon(qrData.type.iconData, color: qrData.type.color),
+          title: Text(qrData.type.name),
           subtitle: Text("${qrData.date}"),
+          onTap: () {
+            Get.to(
+              QrDetails(qrData: qrData),
+              transition: Transition.cupertino,
+            );
+          },
           trailing: IconButton(
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: qrData.data ?? ""));
+              Clipboard.setData(ClipboardData(text: qrData.orgData ?? ""));
               Get.showSnackbar(const GetSnackBar(
                 backgroundColor: Colors.blueAccent,
                 messageText: Text("复制成功"),
@@ -96,11 +102,19 @@ class QrHistoryPage extends GetWidget<QrHistoryLogic> {
             icon: const Icon(Icons.copy),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 70, right: 24,bottom: 8),
-          child: SizedBox(
-            width: double.infinity,
-            child: Text("${qrData.data}"),
+        GestureDetector(
+          onTap: () {
+            Get.to(
+              QrDetails(qrData: qrData),
+              transition: Transition.cupertino,
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 70, right: 24, bottom: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: Text(qrData.orgData),
+            ),
           ),
         )
       ],
