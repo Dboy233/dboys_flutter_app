@@ -1,4 +1,5 @@
 import 'package:dboy_flutter_app/routers/app_pages.dart';
+import 'package:dboy_flutter_app/util/comm_tools.dart';
 import 'package:dboy_flutter_app/widget/widget_download_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,21 +31,16 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
     var navigator = Navigator.of(Get.context!);
     //显示dialog
     Get.dialog(
-      const DownloadDialog(),
+      DownloadDialog(onCancel: (){
+        controller.cancelDownload();
+      },),
       barrierDismissible: false,
       useSafeArea: false,
     );
     var msg = await controller.downloadVideo(name, url);
     navigator.pop(); //关闭dialog
     //显示提示消息
-    Get.showSnackbar(GetSnackBar(
-      backgroundColor: Colors.blue,
-      messageText: Text(
-        msg,
-        style: const TextStyle(color: Colors.white),
-      ),
-      duration: const Duration(seconds: 2),
-    ));
+    showMsg(msg);
   }
 
   @override

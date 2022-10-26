@@ -67,6 +67,10 @@ class PexelsPhotoLogic extends GetxController {
 
   }
 
+  void cancelDownloadPhoto(){
+    _cancelTokenDownload?.cancel("取消下载图片");
+  }
+
   ///下载图片
   ///[saveName] 图片保存的名字
   ///[downloadUrl] 图片下载地址
@@ -108,18 +112,10 @@ class PexelsPhotoLogic extends GetxController {
 
     //开始下载
     var result = await PexelsApi.downloadPhoto(
-        saveName, downloadUrl, _cancelTokenDownload!);
+        saveName, downloadUrl, _cancelTokenDownload!).onError((error, stackTrace) => false);
 
     //修改下载状态
     _isDownload = false;
-
-    // //这里做延迟是因为，上面修改状态后会通知关闭下载弹窗，
-    // //然而弹窗还没有关闭前，下面的提示bar显示了。
-    // //这就导致Getx进行关闭的时候，监测到对后弹出的是Snackbar,就把SnackBar关闭了
-    // //导致弹窗无法关闭，调用手动取消的时候也出现了问题。所以加个延迟确保
-    // //下载弹窗已经被关闭。
-    // //todo:有待优化
-    // await Future.delayed(const Duration(milliseconds: 200));
 
     //通过结果判断弹出提示
     if (result) {

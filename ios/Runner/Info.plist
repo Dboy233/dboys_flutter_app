@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>二维码扫码</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>图片保存</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>视频保存</string>
 </dict>
 </plist>

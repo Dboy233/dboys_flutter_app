@@ -22,7 +22,11 @@ class PexelsPhotoPage extends GetWidget<PexelsPhotoLogic> {
     var navigator = Navigator.of(Get.context!);
     //显示dialog
     Get.dialog(
-      const DownloadDialog(),
+      DownloadDialog(
+        onCancel: () {
+          controller.cancelDownloadPhoto();
+        },
+      ),
       barrierDismissible: false,
       useSafeArea: false,
     );

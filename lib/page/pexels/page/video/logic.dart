@@ -1,5 +1,7 @@
+import 'package:dboy_flutter_app/net/net_request.dart';
 import 'package:dboy_flutter_app/net/net_state.dart';
 import 'package:dboy_flutter_app/net/pexels/bean/Video.dart';
+import 'package:dboy_flutter_app/net/pexels/bean/video_popular.dart';
 import 'package:dboy_flutter_app/net/pexels/pexels_api.dart';
 import 'package:dboy_flutter_app/net/pexels/pexels_net_config.dart';
 import 'package:dio/dio.dart';
@@ -55,7 +57,7 @@ class PexelsVideoLogic extends GetxController {
     _cancelTokenVideo = CancelToken();
     //请求网络
     var request =
-        await PexelsApi.getVideoPopularSimple(url, cancel: _cancelTokenVideo);
+        await PexelsApi.getVideoPopularSimple(url, cancel: _cancelTokenVideo).onError((error, stackTrace) => Request<VideoPopular>(NetState.error));
 
     _isLoadingVideo = false;
 
@@ -67,6 +69,11 @@ class PexelsVideoLogic extends GetxController {
     } else {
       return request.errorMsg ?? "视频列表请求失败！";
     }
+  }
+
+  void cancelDownload(){
+    Get.log("取消下载");
+    _cancelTokenDownload?.cancel("取消下载");
   }
 
   ///下载视频
@@ -100,7 +107,7 @@ class PexelsVideoLogic extends GetxController {
 
     _cancelTokenDownload = CancelToken();
     var isSuccess =
-        await PexelsApi.downloadVideo(name, url, _cancelTokenDownload!);
+        await PexelsApi.downloadVideo(name, url, _cancelTokenDownload!).onError((error, stackTrace) => false);
     _isDownload = false;
 
     if (isSuccess) {

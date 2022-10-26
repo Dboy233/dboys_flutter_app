@@ -5,7 +5,7 @@ import 'package:dboy_flutter_app/net/pexels/bean/Video.dart';
 import 'package:dboy_flutter_app/net/pexels/bean/video_popular.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:image_gallery_saver_v3/image_gallery_saver.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -120,7 +120,8 @@ class PexelsApi {
       var appDocDir = await getTemporaryDirectory();
       String savePath = "${appDocDir.path}/$saveName";
       var response =
-          await NetUtil.instance.dio().download(downloadUrl, savePath);
+          await NetUtil.instance.dio().download(downloadUrl, savePath,cancelToken: cancelToken);
+      Get.log("结果==$response");
       if (response.statusCode == 200) {
         await ImageGallerySaver.saveFile(savePath, name: saveName);
         return true;

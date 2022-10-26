@@ -1,5 +1,4 @@
-import 'package:get/get.dart';
-import 'package:mmkv/mmkv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 ///本地数据持久化工具 抽象类
 abstract class LocalData {
@@ -7,7 +6,7 @@ abstract class LocalData {
   static LocalData? _default;
 
   static LocalData get() {
-    return _default ??= _LocalDataMMKv();
+    return _default ??= _SpLocalData();
   }
 
   ///初始化
@@ -26,77 +25,53 @@ abstract class LocalData {
   Future<bool> delete(String key);
 }
 
-///腾讯mmkv本地数据持久化实现
-class _LocalDataMMKv extends LocalData {
-  MMKV? mmkv;
+class _SpLocalData extends LocalData {
+  late SharedPreferences prefs;
 
   @override
   Future init() async {
-    await MMKV.initialize();
-    mmkv = MMKV.defaultMMKV(cryptKey: "Dboy233");
-    return 'rootDir';
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
-  Future<dynamic> putData(String key, value) {
-    return Future.sync(() {
-      assert(mmkv != null, "mmkv 还没初始化完成");
-      Get.log("本地存储-保存 key=$key value=$value");
-      switch (value.runtimeType) {
-        case int:
-          mmkv?.encodeInt(key, value);
-          break;
-        case String:
-          mmkv?.encodeString(key, value);
-          break;
-        case bool:
-          mmkv?.encodeBool(key, value);
-          break;
-        case double:
-          mmkv?.encodeDouble(key, value);
-          break;
-      }
-    });
+  Future<bool> containsKey(String key) async {
+    return prefs.containsKey(key);
   }
 
   @override
   Future<bool> delete(String key) {
-    assert(mmkv != null, "mmkv 还没初始化完成");
-    return Future.sync(() {
-      mmkv?.removeValue(key);
-      return true;
-    });
+    return prefs.remove(key);
   }
 
   @override
-  Future<bool> containsKey(String key) {
-    assert(mmkv != null, "mmkv 还没初始化完成");
-    return Future.sync(() => mmkv?.containsKey(key) ?? false);
+  Future<S?> getData<S>(String key, {S? defValue}) async {
+    switch (S) {
+      case int:
+        return (prefs.getInt(key) as S?) ?? defValue;
+      case String:
+        return (prefs.getString(key) as S?) ?? defValue;
+      case bool:
+        return (prefs.getBool(key) as S?) ?? defValue;
+      case double:
+        return (prefs.getDouble(key) as S?) ?? defValue;
+      default:
+        throw UnimplementedError("不支持此类型 ${S}");
+    }
   }
 
   @override
-  Future<S?> getData<S>(String key, {S? defValue}) {
-    return Future.sync(() {
-      S? result;
-      switch (S) {
-        case int:
-          result = mmkv?.decodeInt(key) as S?;
-          break;
-        case String:
-          result = mmkv?.decodeString(key) as S?;
-          break;
-        case bool:
-          result = mmkv?.decodeBool(key) as S?;
-          break;
-        case double:
-          result = mmkv?.decodeDouble(key) as S?;
-          break;
-        default:
-          result = null;
-          break;
-      }
-      Get.log("本地存储-获取 key=$key : value=$result");
-      return result ?? defValue;
-    });
+  Future<dynamic> putData(String key, value) {
+    switch (value.runtimeType) {
+      case int:
+        return prefs.setInt(key, value);
+      case String:
+        return prefs.setString(key, value);
+      case bool:
+        return prefs.setBool(key, value);
+      case double:
+        return prefs.setDouble(key, value);
+      default:
+        throw UnimplementedError("不支持此类型数据 ${value.runtimeType}");
+    }
   }
 }

@@ -37,8 +37,6 @@ dependencies:
   get: ^4.6.5
   # 屏幕适配框架
   flutter_screenutil: ^5.5.4
-  #本地存储
-  mmkv: ^1.2.15
   #本地数据库
   objectbox: ^1.6.2
   objectbox_flutter_libs: ^1.6.2
@@ -47,7 +45,7 @@ dependencies:
   #网络
   dio: ^4.0.6
   #ios android 图片保存，其他平台另外处理。
-  image_gallery_saver_v3: ^1.0.0
+  image_gallery_saver: ^1.7.1
   #ios android平台权限申请框架
   permission_handler: ^10.1.0
   #图片查看工具
@@ -65,6 +63,7 @@ dependencies:
   visibility_detector: ^0.3.3
   #将Widgetc转成Image
   widgets_to_image: ^0.0.2
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
