@@ -27,6 +27,7 @@ class _QrPageState extends State<QrPage> {
   ///多码队列最大长度
   final max_queue_size = 4;
 
+  ///判断是否已经展示弹窗结果了
   bool isShowResult = false;
 
   //二维码结果,展示二维码结果，然后保存到数据库中.如果扫描到了多个二维码，会多次调用这个函数，头疼妈的
@@ -42,6 +43,7 @@ class _QrPageState extends State<QrPage> {
 
   //显示结果.
   _showResult() async {
+    //停止扫码
     _cameraController.stop();
     //弹出扫码结果展示框
     await showModalBottomSheet(
@@ -53,8 +55,16 @@ class _QrPageState extends State<QrPage> {
         );
       },
     );
+    //清理扫码结果
     logic.qrResult.clear();
+    //重新扫码
     _cameraController.start();
+  }
+
+  @override
+  void initState() {
+
+    super.initState();
   }
 
   @override
@@ -79,7 +89,7 @@ class _QrPageState extends State<QrPage> {
       body: Stack(
         children: [
           //扫码器
-          VisibilityDetector(
+          VisibilityDetector(//可视范围检测
             key: const ValueKey('MobileScanner'),
             onVisibilityChanged: (VisibilityInfo info) {
               Get.log("可见比例 ${info.visibleFraction}");
@@ -184,6 +194,7 @@ class _QrPageState extends State<QrPage> {
   }
 }
 
+///扫码结果弹窗
 class QrResultDialog extends GetView<QrLogic> {
   ScrollController scrollController;
 
@@ -225,7 +236,7 @@ class QrResultDialog extends GetView<QrLogic> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ListTile(
-          leading: Icon(qrData.type.iconData,color: qrData.type.color),
+          leading: Icon(qrData.type.iconData, color: qrData.type.color),
           title: Text("${qrData.type.name}"),
           subtitle: Text("${qrData.date}"),
           trailing: IconButton(
@@ -243,7 +254,7 @@ class QrResultDialog extends GetView<QrLogic> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 70, right: 24,bottom: 8),
+          padding: const EdgeInsets.only(left: 70, right: 24, bottom: 8),
           child: SizedBox(
             width: double.infinity,
             child: Text(qrData.orgData),

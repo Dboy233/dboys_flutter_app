@@ -1,7 +1,7 @@
 import 'package:dboy_flutter_app/routers/app_pages.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+///权限检测中间件
 class PermissionMiddl extends GetMiddleware  {
   @override
   Future<GetNavConfig?> redirectDelegate(GetNavConfig route) async {

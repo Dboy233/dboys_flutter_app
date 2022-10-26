@@ -10,37 +10,29 @@ import 'package:video_player/video_player.dart';
 
 import 'logic.dart';
 
+///视频详情页面吧算是。
 class WatchPage extends GetWidget<WatchLogic> {
   const WatchPage({super.key});
 
+  ///加载视频
   _loadVideo() async {
     var videoId = Get.parameters['id'];
     print("视频id:$videoId");
     if (videoId == null) {
-      _showMsg("没有视频id");
+      showMsg("没有视频id");
       return;
     }
     var result = await controller.loadVideo(videoId);
     if (result != null) {
-      _showMsg(result);
+      showMsg(result);
     }
-  }
-
-  _showMsg(msg) {
-    //显示提示消息
-    Get.showSnackbar(GetSnackBar(
-      backgroundColor: Colors.blue,
-      messageText: Text(
-        msg,
-        style: const TextStyle(color: Colors.white),
-      ),
-      duration: const Duration(seconds: 2),
-    ));
   }
 
   @override
   Widget build(BuildContext context) {
+    //这个页面只build一次，所以放这里
     _loadVideo();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -179,6 +171,7 @@ class VideoCoverImg extends StatelessWidget {
   }
 }
 
+///视频展示播放控件
 class _VideoView extends StatefulWidget {
   Video? video;
 

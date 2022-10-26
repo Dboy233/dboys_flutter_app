@@ -11,6 +11,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:widgets_to_image/widgets_to_image.dart';
 
+///二维码详情。查看二维码，保存二维码。
 class QrDetails extends StatelessWidget {
   final QrData qrData;
 

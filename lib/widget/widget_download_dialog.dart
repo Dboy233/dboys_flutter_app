@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+///下载文件等待弹窗
 class DownloadDialog extends StatelessWidget {
   final Function()? onCancel;
 

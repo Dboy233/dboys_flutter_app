@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
-
+///二维码创建列表页面
 class QrCreatePage extends GetWidget<QrCreateLogic> {
   const QrCreatePage({super.key});
 
@@ -40,11 +40,12 @@ class OptionsView extends GetView<QrCreateLogic> {
             itemBuilder: (context, index) {
               var type = controller.options[index];
               return Ink(
+                key: ValueKey(type.name),
                 color: type.color,
                 child: InkWell(
-                  key: ValueKey(type.name),
                   splashColor: repairColor(type.color),
                   onTap: () {
+                    //打开对应的创建类型页面
                     Get.toNamed(Routes.qr_create_type(type));
                   },
                   child: Column(

@@ -16,26 +16,6 @@ import 'bean/curated_photos.dart';
 import 'pexels_net_config.dart';
 
 class PexelsApi {
-  // ///获取精选照片列表
-  // ///[pageIndex] 请求的页码
-  // ///[pageSize] 一页数据量
-  // static Future<Request<CuratedPhotos>> getPictureList(
-  //     {int pageIndex = 1, int pageSize = 15}) async {
-  //   return NetUtil.instance.dio().get(
-  //     apiCuratedPhotos,
-  //     queryParameters: {"page": pageIndex, "per_page": pageSize},
-  //   ).then<Request<CuratedPhotos>>((value) {
-  //     //数据检查，是否超过请求限制、或是否请求成功。请求失败了就返回空数据
-  //     if (!_checkMaxRequestSize(value.headers) && value.statusCode == 200) {
-  //       return Request(NetState.success,
-  //           data: CuratedPhotos.fromJson(value.data));
-  //     } else {
-  //       return Request(NetState.error);
-  //     }
-  //   }).onError((error, stackTrace) {
-  //     return Request(NetState.error);
-  //   });
-  // }
 
   ///获取精选照片列表 简易版
   static Future<Request<CuratedPhotos>> getPictureListForUrl(String url,
@@ -94,73 +74,6 @@ class PexelsApi {
       return Request<Video>(NetState.error);
     });
   }
-
-  ///获取搜索列表
-  ///[search] 搜索的内容
-  ///[pageIndex] 请求的页码
-  ///[pageSize] 一页数据量
-  // static Future<Request<SearchPhotos>> getSearchList(String search,
-  //     {int pageIndex = 1, int pageSize = 15}) async {
-  //   return NetUtil.instance.dio().get(apiSearch, queryParameters: {
-  //     "query": search,
-  //     "page": pageIndex,
-  //     "per_page": pageSize
-  //   }).then<Request<SearchPhotos>>((value) {
-  //     if (!_checkMaxRequestSize(value.headers) && value.statusCode == 200) {
-  //       return Request(NetState.success,
-  //           data: SearchPhotos.fromJson(value.data));
-  //     } else {
-  //       return Request(NetState.error);
-  //     }
-  //   }).onError((error, stackTrace) {
-  //     return Request(NetState.error);
-  //   });
-  // }
-
-  ///获取我的收藏列表
-  // static Future<Request<CollectionInfoMine>> getMineCollections(
-  //     {int pageIndex = 1, int pageSize = 10, CancelToken? cancelToken}) {
-  //   return NetUtil.instance
-  //       .dio()
-  //       .get(apiCollectionMine,
-  //           queryParameters: {"per_page": pageSize, "page": pageIndex},
-  //           cancelToken: cancelToken)
-  //       .then<Request<CollectionInfoMine>>((value) {
-  //     if (value.statusCode == 200 && !_checkMaxRequestSize(value.headers)) {
-  //       return Request(NetState.success,
-  //           data: CollectionInfoMine.fromJson(value.data));
-  //     } else {
-  //       Get.log("错误");
-  //       return Request(NetState.error);
-  //     }
-  //   }).onError((error, stackTrace) {
-  //     Get.log("$stackTrace");
-  //     return Request(NetState.error);
-  //   });
-  // }
-
-  /// 获取用户某个收藏集的图片
-  // static Future<Request<CollectionContentsInfo>> getCollectionContentsMedia(
-  //     String id,
-  //     {String type = "photos",
-  //     int page = 1,
-  //     int pageSize = 3,
-  //     CancelToken? cancelToken}) async {
-  //   return NetUtil()
-  //       .dio()
-  //       .get(apiCollectionContentMedia(id),
-  //           queryParameters: {"type": type, "page": page, "per_page": pageSize},
-  //           cancelToken: cancelToken)
-  //       .then<Request<CollectionContentsInfo>>((value) {
-  //     if (value.statusCode == 200 && !_checkMaxRequestSize(value.headers)) {
-  //       return Request(NetState.success,
-  //           data: CollectionContentsInfo.fromJson(value.data));
-  //     }
-  //     return Request(NetState.error);
-  //   }).onError((error, stackTrace) {
-  //     return Request(NetState.error);
-  //   });
-  // }
 
   ///下载图片，，前提是已经有读写权限
   ///[saveName] 图片保存的名字

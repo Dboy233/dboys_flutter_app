@@ -26,6 +26,7 @@ abstract class LocalData {
   Future<bool> delete(String key);
 }
 
+///腾讯mmkv本地数据持久化实现
 class _LocalDataMMKv extends LocalData {
   MMKV? mmkv;
 

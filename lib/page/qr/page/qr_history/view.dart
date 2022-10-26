@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import 'logic.dart';
 
+///二维码历史记录页面
 class QrHistoryPage extends GetWidget<QrHistoryLogic> {
   const QrHistoryPage({super.key});
 
@@ -40,7 +41,7 @@ class QrHistoryPage extends GetWidget<QrHistoryLogic> {
               itemBuilder: (context, index) {
                 var qrData = controller.getHistory()[index];
                 return Dismissible(
-                  key: ValueKey("${qrData.id}"),
+                  key: ValueKey("${qrData.id}"),///需要标记key，不然移除item，刷新的时候会乱
                   onDismissed: (direction) {
                     controller.removeHistory(qrData.id);
                   },

@@ -27,6 +27,7 @@ class QrCreateTypePage extends GetWidget<QrCreateTypeLogic> {
     );
   }
 
+  ///根据类型不同，展示不同的创建内容
   Widget _checkTypeWidget(QrType? qrType) {
     switch (qrType) {
       case QrType.text:
@@ -119,26 +120,20 @@ class CreateTextQr extends GetView<QrCreateTypeLogic> {
             },
           ),
         ),
-        Center(
-          child: FloatingActionButton(
-            onPressed: () {
-              if (_text.isEmpty) {
-                return;
-              }
-              var qrData = QrData.create(QrType.text, _text);
-              Get.to(
-                QrDetails(qrData: qrData),
-                transition: Transition.cupertino,
-              );
-            },
-            child: const Icon(Icons.add),
-          ),
+        _createQrButton(
+          () {
+            if (_text.isEmpty) {
+              return null;
+            }
+            return QrData.create(QrType.text, _text);
+          },
         )
       ],
     );
   }
 }
 
+///邮箱
 class CreateEmailQr extends GetView<QrCreateTypeLogic> {
   var _email = "";
 
@@ -304,6 +299,7 @@ class CreateContactQr extends StatelessWidget {
   }
 }
 
+///url地址
 class CreateUrlQr extends StatelessWidget {
   String url = "";
 
@@ -342,6 +338,7 @@ class CreateUrlQr extends StatelessWidget {
   }
 }
 
+///wifi
 class CreateWifiQr extends StatefulWidget {
   const CreateWifiQr({Key? key}) : super(key: key);
 
@@ -349,6 +346,7 @@ class CreateWifiQr extends StatefulWidget {
   State<CreateWifiQr> createState() => _CreateWifiQrState();
 }
 
+///wifi State
 class _CreateWifiQrState extends State<CreateWifiQr> {
   WifiAuthType? type = WifiAuthType.Wpa;
 
@@ -435,6 +433,7 @@ class _CreateWifiQrState extends State<CreateWifiQr> {
   }
 }
 
+///电话
 class CreatePhoneQr extends StatelessWidget {
   String phone = '';
 
@@ -471,6 +470,7 @@ class CreatePhoneQr extends StatelessWidget {
   }
 }
 
+///短信
 class CreateSmsQr extends StatelessWidget {
   String phone = "";
   String content = "";

@@ -12,6 +12,7 @@ class QrCreateLogic extends GetxController {
     super.onReady();
   }
 
+  ///初始化列表，这里派出了部分没有实现的类型
   void _initQrOptions() async {
     var list = QrType.values.toList()
       ..removeWhere((qrType) =>

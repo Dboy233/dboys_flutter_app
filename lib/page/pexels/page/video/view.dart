@@ -9,6 +9,7 @@ import 'logic.dart';
 class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
   const PexelsVideoPage({super.key});
 
+  ///加载更多视频
   _loadMoreVideo() async {
     var msg = await controller.loadVideos();
     if (msg != null) {
@@ -23,6 +24,7 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
     }
   }
 
+  ///下载视频
   _downloadVideo(name, url) async {
     Get.log("下载: $name \n $url");
     var navigator = Navigator.of(Get.context!);

@@ -1,12 +1,14 @@
+///二维码内容格式化工具
 class QrCodingFormat {
+  ///文本
   static TextFormat text(String text) => TextFormat.create(text);
-
+  ///url地址
   static UrlFormat url(String url) => UrlFormat.create(url);
-
+  ///邮箱
   static EmailFormat email(String email) => EmailFormat.create(email);
-
+  ///电话
   static TelFormat tel(String phone) => TelFormat.create(phone);
-
+  ///联系人
   static ContactFormat contact({
     name = "",
     tel = "",
@@ -24,14 +26,16 @@ class QrCodingFormat {
           area: area,
           org: org,
           til: til);
-
+  ///短信
   static SmsFormat sms({String phone = "", String content = ""}) =>
       SmsFormat.create(phone: phone, content: content);
 
+  ///定位
   static GeoFormat geo({latitude = "", longitude = "", height = ""}) =>
       GeoFormat.create(
           latitude: latitude, longitude: longitude, height: height);
 
+  ///wifi
   static WifiFormat wifi(
           {type = WifiAuthType.Wep,
           required String name,

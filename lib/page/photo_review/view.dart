@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
-
+///图片预览。
 class PhotoReviewPage extends StatelessWidget {
 
   ImageProvider imageProvider;

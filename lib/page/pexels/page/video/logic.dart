@@ -7,22 +7,28 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PexelsVideoLogic extends GetxController {
+  ///视频列表
   var videos = <Video>[];
   final videosNotifyId = "videosId";
 
+  ///下一页数据请求url暂存
   String? nextPage = "";
 
+  ///视频列表获取cancel token
   CancelToken? _cancelTokenVideo;
 
+  ///下载任务cancel token
   CancelToken? _cancelTokenDownload;
 
+  ///判断是否正在加载列表
   bool _isLoadingVideo = false;
+
+  ///判断是否正在下载
   bool _isDownload = false;
+
   @override
-  void onReady() async {
-    String? initDataMsg =
-        await loadVideos(urlPaht: getPexelsVideoPopularFirstPage());
-    Get.log("初始化Video：$initDataMsg");
+  void onReady() {
+    loadVideos(urlPath: getPexelsVideoPopularFirstPage());
     super.onReady();
   }
 
@@ -33,19 +39,21 @@ class PexelsVideoLogic extends GetxController {
     super.onClose();
   }
 
-  Future<String?> loadVideos({String? urlPaht}) async {
+  ///加载视频列表 加载下一页的时候不需要船urlPth
+  Future<String?> loadVideos({String? urlPath}) async {
     if (_isLoadingVideo) {
       return "正在加载视频列表，请稍后再试。";
     }
     _isLoadingVideo = true;
 
-    var url = urlPaht ?? nextPage;
+    //地址检测
+    var url = urlPath ?? nextPage;
     if (url == null) {
       return "已没有更多资源！";
     }
-
+    //创建取消实力
     _cancelTokenVideo = CancelToken();
-
+    //请求网络
     var request =
         await PexelsApi.getVideoPopularSimple(url, cancel: _cancelTokenVideo);
 
@@ -61,6 +69,7 @@ class PexelsVideoLogic extends GetxController {
     }
   }
 
+  ///下载视频
   Future<String> downloadVideo(name, url) async {
     if (_isDownload) {
       return "正在下载请稍后";
