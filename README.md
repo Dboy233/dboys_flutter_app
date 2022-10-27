@@ -55,13 +55,14 @@ ios端已经基本适配完成，有待进一步测试。
   
   `高德地图`去官网申请自己的高德地图API-key [连接地址](https://lbs.amap.com/dev/#/)
    
-   1. 需要同时申请Android端 `apikey` 和 ios端 `apikey`
-   2. Android端在android/local.properties文件中添加一行 `amap_key=***`,`***`是你申请的key。注意不要有`""`。
+   1. 需要同时申请`Android端 `apikey 和 `ios端 `apikey
+   2. Android端在` android/local.properties `文件中添加一行 ` amap_key=*** `,` *** `是你申请的key。注意不要有`""`双引号。
    3. IOS端适配中。。。fk
    
    权限申请框架根据需要修改配置。
-   1. Android 端没啥说的。
-   2. ios端，虽然我吧Podfile 和 Podfile.lock 上传了。免不了会出现问题，权限在Podfile中有表明，用到什么权限解除注释即可。
+   1. Android 端没啥说的。都已经在清单文件增加了。应该不用动。
+   2. ios端，虽然我吧Podfile 和 Podfile.lock 上传了。免不了会出现问题，权限在Podfile中有表明，用到什么权限解除注释即可。还要在ios项目的info.list清单中增加<key><value>队。如果知道权限对应的系统描述符是什么，也可以在XCode的图形化界面进行添加权限` Runner->Info->Custom iosTarget Properties` 目标文件就是 `/ios/Runner/info.plist`
+  3. `permission_handler`需要在ios端的Podfile中增加一下代码，用到哪个解除哪个的注释就行。找到`post_install do |installer|`这行代码，然后一行一行对应着哪里不同添加哪里。
    
    ```
   
