@@ -2,6 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:dboy_flutter_app/net/pexels/bean/Video.dart';
 import 'package:dboy_flutter_app/util/comm_tools.dart';
 import 'package:dboy_flutter_app/widget/slide_image.dart';
+import 'package:dboy_flutter_app/widget/widget_download_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,25 @@ class WatchPage extends GetWidget<WatchLogic> {
       showMsg(result);
     }
   }
+
+
+  _downloadVideo(name, url) async{
+    Get.log("下载: $name \n $url");
+    var navigator = Navigator.of(Get.context!);
+    //显示dialog
+    Get.dialog(
+      DownloadDialog(onCancel: (){
+        controller.cancelDownload();
+      },),
+      barrierDismissible: false,
+      useSafeArea: false,
+    );
+    var msg = await controller.downloadVideo(name, url);
+    navigator.pop(); //关闭dialog
+    //显示提示消息
+    showMsg(msg);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +115,22 @@ class WatchPage extends GetWidget<WatchLogic> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.download),
+                      onPressed: () {
+                        var video = controller.video;
+                        if(video==null)return;
+                        var file = video.videoFiles!.first;
+                        var type = file.fileType
+                            ?.substring(file.fileType!.indexOf("/") + 1) ??
+                            "mp4";
+                        var downloadName =
+                            "${video.user?.name ?? "Unknown user"}-${video.id}.$type";
+                        var downloadUrl = file.link;
+                        _downloadVideo(downloadName, downloadUrl);
+                      },
+                      icon: const Icon(Icons.download),
                       label: Text(
                         '下载视频',
-                        style: TextStyle(fontSize: 60.sp),
+                        style: TextStyle(fontSize: 50.sp),
                       ),
                     ),
                   ),

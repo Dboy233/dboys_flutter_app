@@ -71,6 +71,7 @@ class PexelsVideoLogic extends GetxController {
     }
   }
 
+  ///取消下载
   void cancelDownload(){
     Get.log("取消下载");
     _cancelTokenDownload?.cancel("取消下载");
@@ -85,10 +86,10 @@ class PexelsVideoLogic extends GetxController {
 
     //权限申请
     if (GetPlatform.isIOS) {
-      var permission = await Permission.photos.status;
+      var permission = await Permission.storage.status;
       if (permission.isDenied) {
         //申请权限，如果被拒绝了提示
-        var requestPermission = await Permission.photos.request();
+        var requestPermission = await Permission.storage.request();
         if (requestPermission.isDenied) {
           _isDownload = false;
           return "没有权限,请开启访问相册权限～";

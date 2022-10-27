@@ -119,6 +119,7 @@ class PexelsApi {
     if (GetPlatform.isAndroid || GetPlatform.isIOS) {
       var appDocDir = await getTemporaryDirectory();
       String savePath = "${appDocDir.path}/$saveName";
+      Get.log("视频保存位置$savePath");
       var response =
           await NetUtil.instance.dio().download(downloadUrl, savePath,cancelToken: cancelToken);
       Get.log("结果==$response");
