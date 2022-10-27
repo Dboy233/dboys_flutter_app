@@ -1,8 +1,7 @@
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader)
     }
 }
 
@@ -21,6 +20,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def amap_key = localProperties.getProperty('amap_key')
+if (amap_key == null) {
+    throw GradleException("在local.properties文件中填写你的amap_key! 例如 amap_key=abcd1234 ")
+}
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -69,9 +72,14 @@ android {
         }
     }
     buildTypes {
+        debug {
+            //本地key设置
+            manifestPlaceholders = [AMAP_KEY: amap_key]
+            signingConfig signingConfigs.release
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            //本地key设置
+            manifestPlaceholders = [AMAP_KEY: amap_key]
             signingConfig signingConfigs.release
         }
     }

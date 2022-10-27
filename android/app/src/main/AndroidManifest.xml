@@ -60,10 +60,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="d7732341069ad078644b359b7f72550f"/>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="${AMAP_KEY}"/>
 
         <!--高德定位服务-->
-        <service android:name="com.amap.api.location.APSService"></service>
+        <service android:name="com.amap.api.location.APSService"/>
     </application>
 
 
