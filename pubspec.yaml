@@ -63,7 +63,12 @@ dependencies:
   visibility_detector: ^0.3.3
   #将Widgetc转成Image
   widgets_to_image: ^0.0.2
+  #本地存储工具
   shared_preferences: ^2.0.15
+  #高德插件
+  amap_flutter_base: ^3.0.0 #基础库
+  amap_flutter_map: ^3.0.0 #地图库
+  amap_flutter_location: ^3.0.0 #定位库
 
 dev_dependencies:
   flutter_test:
@@ -83,12 +88,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-#大图
+  assets: #大图
     - images/img_pexels_cover.jpg
     - images/img_scanner_cover.jpg
     - images/img_deveper_cover.png
-#小图
+    - images/img_earth.png
+    #小图
     - images/icon_github.png
     - images/icon_pexels.png
     - images/icon_scanner.png

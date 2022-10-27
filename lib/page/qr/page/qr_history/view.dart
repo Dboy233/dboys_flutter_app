@@ -81,7 +81,7 @@ class QrHistoryPage extends GetWidget<QrHistoryLogic> {
       children: [
         ListTile(
           leading: Icon(qrData.type.iconData, color: qrData.type.color),
-          title: Text(qrData.type.name),
+          title: Text(qrData.type.label),
           subtitle: Text("${qrData.date}"),
           onTap: () {
             Get.to(

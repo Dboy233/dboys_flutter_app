@@ -22,7 +22,7 @@ abstract class Routes {
 
   static const qr_create = qr + _Paths.qr_create;//扫码创建列表选择
 
-  static String qr_create_type(QrType type) => "$qr_create/${type.enumName}";//二维码创建
+  static String qr_create_type(QrType type) => "$qr_create/${type.name}";//二维码创建
 
   //endregion
 

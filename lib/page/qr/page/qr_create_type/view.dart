@@ -1,7 +1,12 @@
+import 'package:amap_flutter_base/amap_flutter_base.dart';
+import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:dboy_flutter_app/database/bean/qr_data.dart';
 import 'package:dboy_flutter_app/page/qr/page/qr_details/view.dart';
 import 'package:dboy_flutter_app/routers/route_keys.dart';
+import 'package:dboy_flutter_app/util/comm_tools.dart';
+import 'package:dboy_flutter_app/util/location_util.dart';
 import 'package:dboy_flutter_app/util/qr_coding_format.dart';
+import 'package:dboy_flutter_app/widget/location_loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,7 +22,7 @@ class QrCreateTypePage extends GetWidget<QrCreateTypeLogic> {
   @override
   Widget build(BuildContext context) {
     QrType? type = QrType.values.toList().firstWhereOrNull(
-        (element) => element.enumName == Get.parameters[RouteKeys.TYPE]);
+        (element) => element.name == Get.parameters[RouteKeys.TYPE]);
     return Scaffold(
       appBar: AppBar(
         title: const Text("CREATE"),
@@ -45,6 +50,7 @@ class QrCreateTypePage extends GetWidget<QrCreateTypeLogic> {
       case QrType.sms:
         return CreateSmsQr();
       case QrType.geo:
+        return CreateGeoQr();
       case QrType.driverLicense:
       default:
         return const Center(child: Text("紧张刺激的开发中，可能不支持此类型"));
@@ -63,11 +69,33 @@ class QrTypeTitle extends StatelessWidget {
     return ListTile(
       leading: Icon(type.iconData, color: type.color),
       title: Text(
-        "创建${type.name}二维码",
+        "创建${type.label}二维码",
         style: TextStyle(color: Colors.black87, fontSize: 60.sp),
       ),
     );
   }
+}
+
+///基本样式通用EditText
+Widget _commEditText(
+  String label,
+  ValueChanged<String> onChange, {
+  TextInputType textInputType = TextInputType.text,
+  TextInputAction textInputAction = TextInputAction.next,
+  TextEditingController? controller,
+}) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: TextField(
+      controller: controller,
+      decoration:
+          InputDecoration(border: const OutlineInputBorder(), labelText: label),
+      keyboardType: textInputType,
+      textInputAction: textInputAction,
+      style: TextStyle(color: Colors.black87, fontSize: contentFontSize),
+      onChanged: onChange,
+    ),
+  );
 }
 
 typedef OnCreate = QrData? Function();
@@ -352,6 +380,7 @@ class _CreateWifiQrState extends State<CreateWifiQr> {
 
   var ssidName = "";
   var password = "";
+
   List<DropdownMenuItem<WifiAuthType>> _getItem() => WifiAuthType.values
       .toList()
       .map<DropdownMenuItem<WifiAuthType>>(
@@ -523,5 +552,161 @@ class CreateSmsQr extends StatelessWidget {
         }),
       ],
     );
+  }
+}
+
+///创建定位二维码
+class CreateGeoQr extends StatefulWidget {
+  const CreateGeoQr({super.key});
+
+  @override
+  State<CreateGeoQr> createState() => _CreateGeoQrState();
+}
+
+class _CreateGeoQrState extends State<CreateGeoQr> {
+  final controller = Get.find<QrCreateTypeLogic>();
+
+  ///我的坐标 通过定位获取
+  LatLng? _myLocal;
+
+  ///选择的 经度
+  double longitude = 0;
+
+  ///选择的 纬度
+  double latitude = 0;
+
+  ///地图控制器
+  AMapController? _controllerMap;
+
+  ///地图标记
+  final marker = <Marker>{};
+
+  @override
+  void initState() {
+    _location();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controllerMap?.disponse();
+    super.dispose();
+  }
+
+  ///定位
+  _location() async {
+    var msg = await controller.initLocation((data) {
+      latitude = double.parse(data["latitude"].toString());
+      longitude = double.parse(data["longitude"].toString());
+      _myLocal = LatLng(latitude, longitude);
+      marker.clear();
+      marker.add(_getMyMarker());
+      setState(() {});
+    });
+    if (msg != null) {
+      showMsg(msg);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_myLocal == null) //没有取得定位的时候占位
+          Container(
+            width: double.infinity,
+            height: Get.height / 2,
+            color: Colors.black26,
+          ),
+        if (_myLocal != null) //取得定位的时候展示地图
+          SizedBox(
+            key: const ValueKey("高德地图-容器"),
+            width: double.infinity,
+            height: Get.height / 2,
+            child: AMapWidget(
+              key: const ValueKey("高德地图-View"),
+              apiKey: AMapApiKey(
+                iosKey: getGdIosKey(),
+                androidKey: getGdAndroidKey(),
+              ),
+              initialCameraPosition: //初始展示位置
+                  CameraPosition(target: _myLocal!),
+              privacyStatement: const AMapPrivacyStatement(
+                //能走到这里，协议肯定都同意了
+                hasContains: true, hasShow: true, hasAgree: true,
+              ),
+              //禁止旋转
+              rotateGesturesEnabled: false,
+              //禁止倾斜
+              tiltGesturesEnabled: false,
+              //禁止显示3d建筑
+              buildingsEnabled: false,
+              //设置地图标记位置
+              markers: Set<Marker>.of(marker),
+              //点击事件
+              onTap: _onMapTap,
+              touchPoiEnabled: true,
+              onPoiTouched: (argument) {
+                if (argument.latLng != null) {
+                  _onMapTap(argument.latLng!);
+                }
+              },
+              onMapCreated: (controller) => _controllerMap = controller,
+            ),
+          ),
+        SizedBox(
+          height: 50.h,
+        ),
+        Text(
+          """
+  我的位置: 
+      经度-${_myLocal?.longitude ?? 0} 
+      纬度-${_myLocal?.latitude ?? 0}""",
+          style: TextStyle(fontSize: contentFontSize, color: Colors.black),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          """
+  选择位置: 
+      经度-$longitude
+      纬度-$latitude""",
+          style: TextStyle(fontSize: contentFontSize, color: Colors.black),
+        ),
+       const SizedBox(height: 10),
+        _createQrButton(() {
+          if(longitude==0||latitude==0){
+            return null;
+          }
+         return QrData.create(QrType.geo,
+              QrCodingFormat.geo(longitude: "$longitude",latitude: "$latitude").toString());
+        }),
+      ],
+    );
+  }
+
+  ///当地图点击的时候，[latLng]是坐标信息
+  _onMapTap(LatLng latLng) {
+    longitude = latLng.longitude;
+    latitude = latLng.latitude;
+    marker.clear();
+    marker.add(_getMyMarker());
+    marker.add(Marker(position: LatLng(latitude, longitude)));
+    setState(() {});
+  }
+
+  ///获取我的位置标记
+  Marker _getMyMarker() {
+    return Marker(
+        position: _myLocal!,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        onTap: (id) {
+          //点击我的位置的时候，清空标记
+          longitude = _myLocal!.longitude;
+          latitude = _myLocal!.latitude;
+          marker.clear();
+          marker.add(_getMyMarker());
+          setState(() {});
+        });
   }
 }

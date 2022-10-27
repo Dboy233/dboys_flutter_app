@@ -1,16 +1,24 @@
+import 'dart:io';
+
 import 'package:dboy_flutter_app/database/bean/home_page_item_data.dart';
 import 'package:dboy_flutter_app/routers/app_pages.dart';
+import 'package:dboy_flutter_app/util/local_data_key.dart';
+import 'package:dboy_flutter_app/util/local_data_util.dart';
+import 'package:dboy_flutter_app/widget/privacy_auth_dialog.dart';
 import 'package:dboy_flutter_app/widget/slide_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'logic.dart';
-
-class HomePage extends GetView<HomeLogic> {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<HomeAppItem> _apps = <HomeAppItem>[
     //开发者
     HomeAppItem(
@@ -36,6 +44,37 @@ class HomePage extends GetView<HomeLogic> {
       Routes.qr,
     ),
   ];
+
+  @override
+  void initState() {
+    _checkPrivacy();
+    super.initState();
+  }
+
+  ///隐私政策检查
+  _checkPrivacy() async {
+    Get.log("隐私政策中间件检查");
+    var isAgree =
+        await LocalData.get().getData<bool>(LocalDataKey.PRIVACY_AUTH_KEY) ??
+            false;
+    if (!isAgree) {
+      Get.log("展示隐私政策弹窗");
+      await Get.dialog(PrivacyAuthDialog(
+        onAgree: () {
+          Get.log("同意了");
+          LocalData.get().putData(LocalDataKey.PRIVACY_AUTH_KEY, true);
+          Get.back();
+        },
+        onRefuse: () {
+          Get.log("拒绝了");
+          //直接tm退出app
+          exit(0);
+        },
+      ));
+    } else {
+      Get.log("隐私政策检查通过");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +160,7 @@ class AppPage extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 60.r,right: 60.r),
+                    padding: EdgeInsets.only(left: 60.r, right: 60.r),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.max,

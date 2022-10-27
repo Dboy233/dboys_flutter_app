@@ -40,7 +40,7 @@ class OptionsView extends GetView<QrCreateLogic> {
             itemBuilder: (context, index) {
               var type = controller.options[index];
               return Ink(
-                key: ValueKey(type.name),
+                key: ValueKey(type.label),
                 color: type.color,
                 child: InkWell(
                   splashColor: repairColor(type.color),
@@ -57,7 +57,7 @@ class OptionsView extends GetView<QrCreateLogic> {
                         size: 120.r,
                       ),
                       Text(
-                        type.name,
+                        type.label,
                         style: TextStyle(fontSize: 55.sp),
                       )
                     ],

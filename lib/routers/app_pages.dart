@@ -24,15 +24,18 @@ part 'app_routes.dart';
 class AppPages {
   ///初始页面
   static const initial = _Paths.home;
+
   ///路由
   static final routes = <GetPage<dynamic>>[
-    GetPage(//首页
+    GetPage(
+      //首页
       name: _Paths.home,
       transition: Transition.cupertino,
       page: () => HomePage(),
       binding: HomeBinding(),
       children: [
-        GetPage(///pexels 页面
+        GetPage(
+          ///pexels 页面
           name: _Paths.pexels,
           transition: Transition.cupertino,
           binding: PexelsBinding(),
@@ -46,7 +49,8 @@ class AppPages {
             )
           ],
         ),
-        GetPage(///扫码页面
+        GetPage(
+            ///扫码页面
             name: _Paths.qr,
             transition: Transition.cupertino,
             middlewares: [PermissionMiddl()],

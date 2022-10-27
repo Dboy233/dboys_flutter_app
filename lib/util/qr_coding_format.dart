@@ -31,7 +31,7 @@ class QrCodingFormat {
       SmsFormat.create(phone: phone, content: content);
 
   ///定位
-  static GeoFormat geo({latitude = "", longitude = "", height = ""}) =>
+  static GeoFormat geo({latitude = "0", longitude = "0", height = "0"}) =>
       GeoFormat.create(
           latitude: latitude, longitude: longitude, height: height);
 
@@ -154,7 +154,7 @@ class GeoFormat {
 
   final String height;
 
-  GeoFormat.create({this.latitude = "", this.longitude = "", this.height = ""});
+  GeoFormat.create({this.latitude = "0", this.longitude = "0", this.height = "0"});
 
   @override
   String toString() {

@@ -19,7 +19,7 @@ abstract class LocalData {
   Future<dynamic> putData(String key, dynamic value);
 
   ///获取数据
-  Future<S?> getData<S>(String key, {S? defValue});
+  Future<S?> getData<S>(String key);
 
   ///删除数据
   Future<bool> delete(String key);
@@ -44,16 +44,16 @@ class _SpLocalData extends LocalData {
   }
 
   @override
-  Future<S?> getData<S>(String key, {S? defValue}) async {
+  Future<S?> getData<S>(String key) async {
     switch (S) {
       case int:
-        return (prefs.getInt(key) as S?) ?? defValue;
+        return prefs.getInt(key) as S?;
       case String:
-        return (prefs.getString(key) as S?) ?? defValue;
+        return prefs.getString(key) as S?;
       case bool:
-        return (prefs.getBool(key) as S?) ?? defValue;
+        return prefs.getBool(key) as S?;
       case double:
-        return (prefs.getDouble(key) as S?) ?? defValue;
+        return prefs.getDouble(key) as S?;
       default:
         throw UnimplementedError("不支持此类型 ${S}");
     }
