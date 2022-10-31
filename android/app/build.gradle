@@ -79,8 +79,11 @@ android {
         }
         release {
             //本地key设置
+            shrinkResources true
+            minifyEnabled true
             manifestPlaceholders = [AMAP_KEY: amap_key]
             signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -90,7 +93,7 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     //高德地图sdk
     implementation 'com.amap.api:3dmap:8.1.0'
     //高德定位sdk

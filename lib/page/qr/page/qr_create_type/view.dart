@@ -626,10 +626,6 @@ class _CreateGeoQrState extends State<CreateGeoQr> {
             height: Get.height / 2,
             child: AMapWidget(
               key: const ValueKey("高德地图-View"),
-              apiKey: AMapApiKey(
-                iosKey: getGdIosKey(),
-                androidKey: getGdAndroidKey(),
-              ),
               initialCameraPosition: //初始展示位置
                   CameraPosition(target: _myLocal!),
               privacyStatement: const AMapPrivacyStatement(
