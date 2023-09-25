@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:dboy_flutter_app/database/bean/home_page_item_data.dart';
 import 'package:dboy_flutter_app/routers/app_pages.dart';
@@ -45,8 +46,12 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  ///当前背景
+  var currentBg = "";
+
   @override
   void initState() {
+    currentBg = _apps[0].coverImg;
     _checkPrivacy();
     super.initState();
   }
@@ -79,15 +84,36 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
-      body: PageView.builder(
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.only(left: 20.r, right: 20.r),
-          child: AppPage(
-              key: ValueKey(_apps[index].appName), homeAppItem: _apps[index]),
-        ),
-        itemCount: _apps.length,
-        controller: PageController(viewportFraction: 0.86, keepPage: true),
+      body: Stack(
+        children: [
+          Image.asset(
+            currentBg,
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              color: Colors.black.withAlpha(0),
+            ),
+          ),
+          PageView.builder(
+            onPageChanged: (value) {
+              setState(() {
+                currentBg = _apps[value].coverImg;
+              });
+            },
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsets.only(left: 20.r, right: 20.r),
+              child: AppPage(
+                  key: ValueKey(_apps[index].appName),
+                  homeAppItem: _apps[index]),
+            ),
+            itemCount: _apps.length,
+            controller: PageController(viewportFraction: 0.86, keepPage: true),
+          ),
+        ],
       ),
     );
   }
