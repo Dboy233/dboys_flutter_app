@@ -17,6 +17,8 @@ class QrLogic extends GetxController {
     super.onInit();
   }
 
+
+
   void addBar(Barcode barcode) {
     QrData qrData = QrData()..orgData = barcode.rawValue ?? "null";
     qrData.type = _checkType(barcode);

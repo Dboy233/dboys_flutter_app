@@ -31,7 +31,8 @@ class _QrPageState extends State<QrPage> {
   bool isShowResult = false;
 
   //二维码结果,展示二维码结果，然后保存到数据库中.如果扫描到了多个二维码，会多次调用这个函数，头疼妈的
-  _onDetect(Barcode barcode, MobileScannerArguments? args) async {
+  _onDetect(BarcodeCapture barcodeCapture) async {
+    var barcode = barcodeCapture.barcodes[0];
     logic.addBar(barcode);
     if (isShowResult) {
       return;
@@ -63,7 +64,6 @@ class _QrPageState extends State<QrPage> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -89,7 +89,8 @@ class _QrPageState extends State<QrPage> {
       body: Stack(
         children: [
           //扫码器
-          VisibilityDetector(//可视范围检测
+          VisibilityDetector(
+            //可视范围检测
             key: const ValueKey('MobileScanner'),
             onVisibilityChanged: (VisibilityInfo info) {
               Get.log("可见比例 ${info.visibleFraction}");
@@ -101,7 +102,6 @@ class _QrPageState extends State<QrPage> {
             },
             child: MobileScanner(
               fit: BoxFit.cover,
-              allowDuplicates: false,
               controller: _cameraController,
               onDetect: _onDetect,
             ),

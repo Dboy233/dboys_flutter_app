@@ -88,7 +88,7 @@ class QrDetails extends StatelessWidget {
                     )
                   ],
                 ),
-                child: QrImage(
+                child: QrImageView(
                   data: qrData.orgData,
                   size: 0.7.sw,
                 ),
