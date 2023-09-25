@@ -1,14 +1,12 @@
 import 'package:dboy_flutter_app/database/bean/qr_data.dart';
 import 'package:dboy_flutter_app/util/comm_tools.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 ///二维码详情。查看二维码，保存二维码。
@@ -28,15 +26,17 @@ class QrDetails extends StatelessWidget {
         //申请权限，如果被拒绝了提示
         var requestPermission = await Permission.photos.request();
         if (requestPermission.isDenied) {
-          return "没有权限,请开启访问相册权限～";
+          showMsg("没有权限,请开启访问相册权限～");
+          return;
         }
       }
     } else if (GetPlatform.isAndroid) {
-      var permission = await Permission.storage.status;
+      var permission = await Permission.photos.status;
       if (permission.isDenied) {
-        var requestPermission = await Permission.storage.request();
+        var requestPermission = await Permission.photos.request();
         if (requestPermission.isDenied) {
-          return "没有权限,请开启读写权限～";
+          showMsg("没有权限,请开启读写权限～");
+          return;
         }
       }
     }
@@ -96,7 +96,7 @@ class QrDetails extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 45.sp,top: 80.sp,right: 45.sp),
+            padding: EdgeInsets.only(left: 45.sp, top: 80.sp, right: 45.sp),
             child: Text(
               qrData.orgData,
               style: TextStyle(color: Colors.black, fontSize: 65.sp),

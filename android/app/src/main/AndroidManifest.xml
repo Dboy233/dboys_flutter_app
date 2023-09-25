@@ -30,6 +30,10 @@
     <!--如果您的应用需要后台定位权限，且有可能运行在Android Q设备上,并且设置了target>28，必须增加这个权限声明-->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"

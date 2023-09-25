@@ -45,7 +45,7 @@ class AppPages {
               name: _Paths.pexels_video + _Paths.pexels_video_watch,
               transition: Transition.cupertino,
               binding: WatchBinding(),
-              page: () => WatchPage(),
+              page: () => const WatchPage(),
             )
           ],
         ),
