@@ -10,42 +10,43 @@ ios端已经基本适配完成，有待进一步测试。
 当前项目使用的第三方库:
 
 ```yaml
-  #状态管理框架
-  get: ^4.6.5
-  # 屏幕适配框架
-  flutter_screenutil: ^5.5.4
-  #本地数据库
-  objectbox: ^1.6.2
-  objectbox_flutter_libs: ^1.6.2
-  #打开网站
-  url_launcher: ^6.1.6
-  #网络
-  dio: ^4.0.6
-  #ios android 图片保存，其他平台另外处理。
-  image_gallery_saver: ^1.7.1
-  #ios android平台权限申请框架
-  permission_handler: ^10.1.0
-  #图片查看工具
-  photo_view: ^0.14.0
-  #视频播放器
-  video_player: ^2.4.7
-  chewie: ^1.3.5
-  #扫码
-  mobile_scanner: ^2.0.0
-  #生成二维码
-  qr_flutter: ^4.0.0
-  #异步框架
-  async: ^2.9.0
-  #可视区域检测
-  visibility_detector: ^0.3.3
-  #将Widgetc转成Image
-  widgets_to_image: ^0.0.2
-  #本地存储工具
-  shared_preferences: ^2.0.15
-  #高德插件
-  amap_flutter_base: ^3.0.0 #基础库
-  amap_flutter_map: ^3.0.0 #地图库
-  amap_flutter_location: ^3.0.0 #定位库
+   #状态管理框架
+   get: ^4.6.6
+   # 屏幕适配框架
+   flutter_screenutil: ^5.9.0
+   #本地数据库
+   objectbox: ^1.6.2
+   objectbox_flutter_libs: ^1.6.2
+   #打开网站
+   url_launcher: ^6.1.14
+   #网络
+   dio: ^5.3.3
+   #ios android 图片保存，其他平台另外处理。
+   image_gallery_saver: ^2.0.3
+   #ios android平台权限申请框架
+   permission_handler: ^11.0.0
+   #图片查看工具
+   photo_view: ^0.14.0
+   #视频播放器
+   video_player: ^2.7.2
+   chewie: ^1.7.1
+   #扫码
+   mobile_scanner: ^3.4.1
+   #生成二维码
+   qr_flutter: ^4.1.0
+   #异步框架
+   async: ^2.11.0
+   #可视区域检测
+   visibility_detector: ^0.4.0+2
+   #将Widgetc转成Image
+   widgets_to_image: ^0.0.2
+   #本地存储工具
+   shared_preferences: ^2.2.1
+   #高德插件
+   amap_flutter_base: ^3.0.0 #基础库
+   amap_flutter_map: ^3.0.0 #地图库
+   amap_flutter_location: ^3.0.0 #定位库
+   easy_refresh: ^3.3.2+1
 ```
 
 `Pexels`需要申请一个APIKey 用于图片和视频的数据请求-[连接地址](https://www.pexels.com/zh-cn/)
@@ -136,8 +137,10 @@ end
    
    > 编译注意事项
    
-   android 编译的时候默认是开启混淆的，所以集成的第三方sdk一定要配置混淆信息。
+   android 编译的时候默认是开启混淆的，所以集成的第三方sdk一定要配置混淆信息，如果要单独打开android项目，flutter的 SDK要和项目在同一个磁盘下，sdk在D盘项目位置也要在D盘。并且要设置环境变量PUB_CACHE在同一个磁盘下，例如D:\SDK\cache\pub。
+   这样单独打开Android项目的时候才不会报错，这是官方的一个BUG，但是引起的原因未知。
    
+
 
 
 # 截图
