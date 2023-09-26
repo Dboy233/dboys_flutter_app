@@ -2,7 +2,6 @@ import 'package:dboy_flutter_app/page/pexels/page/photo/view.dart';
 import 'package:dboy_flutter_app/page/pexels/page/video/view.dart';
 import 'package:dboy_flutter_app/util/local_data_key.dart';
 import 'package:dboy_flutter_app/util/local_data_util.dart';
-import 'package:dboy_flutter_app/widget/lazy_indexed_stack.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
