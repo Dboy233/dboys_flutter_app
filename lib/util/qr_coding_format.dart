@@ -2,12 +2,16 @@
 class QrCodingFormat {
   ///文本
   static TextFormat text(String text) => TextFormat.create(text);
+
   ///url地址
   static UrlFormat url(String url) => UrlFormat.create(url);
+
   ///邮箱
   static EmailFormat email(String email) => EmailFormat.create(email);
+
   ///电话
   static TelFormat tel(String phone) => TelFormat.create(phone);
+
   ///联系人
   static ContactFormat contact({
     name = "",
@@ -26,6 +30,7 @@ class QrCodingFormat {
           area: area,
           org: org,
           til: til);
+
   ///短信
   static SmsFormat sms({String phone = "", String content = ""}) =>
       SmsFormat.create(phone: phone, content: content);
@@ -37,7 +42,7 @@ class QrCodingFormat {
 
   ///wifi
   static WifiFormat wifi(
-          {type = WifiAuthType.Wep,
+          {type = WifiAuthType.WEP,
           required String name,
           password = "",
           isHide = false}) =>
@@ -154,7 +159,8 @@ class GeoFormat {
 
   final String height;
 
-  GeoFormat.create({this.latitude = "0", this.longitude = "0", this.height = "0"});
+  GeoFormat.create(
+      {this.latitude = "0", this.longitude = "0", this.height = "0"});
 
   @override
   String toString() {
@@ -172,23 +178,25 @@ class WifiFormat {
   bool isHide;
 
   WifiFormat.create(
-      {this.type = WifiAuthType.Wep,
+      {this.type = WifiAuthType.WEP,
       required this.name,
       this.password = "",
       this.isHide = false});
 
   @override
   String toString() {
-    return "WIFI:T:${type.type};S:$name;P:$password;H:$isHide;";
+    var stringBuffer = StringBuffer();
+    stringBuffer.write("WIFI:T:${type.name};S:$name;");
+    if (password.isNotEmpty) {
+      stringBuffer.write("P:$password;");
+    }
+    stringBuffer.write("H:$isHide;");
+    return stringBuffer.toString();
   }
 }
 
 enum WifiAuthType {
-  Wpa("WAP"),
-  Wep("WEP"),
-  No_Pass("nopass");
-
-  final String type;
-
-  const WifiAuthType(this.type);
+  WAP,
+  WEP,
+  nopass;
 }

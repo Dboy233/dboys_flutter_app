@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
+
 ///二维码创建列表页面
 class QrCreatePage extends GetWidget<QrCreateLogic> {
   const QrCreatePage({super.key});
@@ -39,9 +40,12 @@ class OptionsView extends GetView<QrCreateLogic> {
                 crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
             itemBuilder: (context, index) {
               var type = controller.options[index];
-              return Ink(
+              return Material(
                 key: ValueKey(type.label),
                 color: type.color,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                elevation: 3,
                 child: InkWell(
                   splashColor: repairColor(type.color),
                   onTap: () {
@@ -53,12 +57,15 @@ class OptionsView extends GetView<QrCreateLogic> {
                     children: [
                       Icon(
                         type.iconData,
-                        color: Colors.black87,
+                        color: Colors.black54,
                         size: 120.r,
                       ),
                       Text(
                         type.label,
-                        style: TextStyle(fontSize: 55.sp),
+                        style: TextStyle(
+                          fontSize: 55.sp,
+                          color: Colors.black54,
+                        ),
                       )
                     ],
                   ),

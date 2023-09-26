@@ -4,9 +4,7 @@ import 'package:dboy_flutter_app/database/bean/qr_data.dart';
 import 'package:dboy_flutter_app/page/qr/page/qr_details/view.dart';
 import 'package:dboy_flutter_app/routers/route_keys.dart';
 import 'package:dboy_flutter_app/util/comm_tools.dart';
-import 'package:dboy_flutter_app/util/location_util.dart';
 import 'package:dboy_flutter_app/util/qr_coding_format.dart';
-import 'package:dboy_flutter_app/widget/location_loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -50,10 +48,10 @@ class QrCreateTypePage extends GetWidget<QrCreateTypeLogic> {
       case QrType.sms:
         return CreateSmsQr();
       case QrType.geo:
-        return CreateGeoQr();
+        return const CreateGeoQr();
       case QrType.driverLicense:
       default:
-        return const Center(child: Text("紧张刺激的开发中，可能不支持此类型"));
+        return const Center(child: Text("暂不支持，紧张刺激的开发中..."));
     }
   }
 }
@@ -376,21 +374,27 @@ class CreateWifiQr extends StatefulWidget {
 
 ///wifi State
 class _CreateWifiQrState extends State<CreateWifiQr> {
-  WifiAuthType? type = WifiAuthType.Wpa;
+  WifiAuthType type = WifiAuthType.WAP;
 
   var ssidName = "";
   var password = "";
 
-  List<DropdownMenuItem<WifiAuthType>> _getItem() => WifiAuthType.values
-      .toList()
-      .map<DropdownMenuItem<WifiAuthType>>(
-          (type) => DropdownMenuItem<WifiAuthType>(
-                value: type,
-                child: Text(type.type,
-                    style: TextStyle(
-                        color: Colors.black87, fontSize: contentFontSize)),
-              ))
-      .toList();
+  List<DropdownMenuItem<WifiAuthType>> _getItem() {
+    return WifiAuthType.values
+        .toList()
+        .map<DropdownMenuItem<WifiAuthType>>((type) {
+      return DropdownMenuItem<WifiAuthType>(
+        value: type,
+        child: Text(
+          type.name,
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: contentFontSize,
+          ),
+        ),
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -415,7 +419,7 @@ class _CreateWifiQrState extends State<CreateWifiQr> {
                   items: _getItem(),
                   onChanged: (value) {
                     setState(() {
-                      type = value;
+                      type = value!;
                     });
                   },
                 ),
@@ -450,7 +454,12 @@ class _CreateWifiQrState extends State<CreateWifiQr> {
           ),
         ),
         _createQrButton(() {
-          if (ssidName.isEmpty || password.isEmpty) {
+          if (ssidName.isEmpty) {
+            showMsg("名称为空");
+            return null;
+          }
+          if(password.isEmpty&&type!=WifiAuthType.nopass){
+            showMsg("密码为空");
             return null;
           }
           var wifi = QrCodingFormat.wifi(
@@ -669,13 +678,15 @@ class _CreateGeoQrState extends State<CreateGeoQr> {
       纬度-$latitude""",
           style: TextStyle(fontSize: contentFontSize, color: Colors.black),
         ),
-       const SizedBox(height: 10),
+        const SizedBox(height: 10),
         _createQrButton(() {
-          if(longitude==0||latitude==0){
+          if (longitude == 0 || latitude == 0) {
             return null;
           }
-         return QrData.create(QrType.geo,
-              QrCodingFormat.geo(longitude: "$longitude",latitude: "$latitude").toString());
+          return QrData.create(
+              QrType.geo,
+              QrCodingFormat.geo(longitude: "$longitude", latitude: "$latitude")
+                  .toString());
         }),
       ],
     );
