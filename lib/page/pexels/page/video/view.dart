@@ -1,6 +1,7 @@
 import 'package:dboy_flutter_app/routers/app_pages.dart';
 import 'package:dboy_flutter_app/util/comm_tools.dart';
 import 'package:dboy_flutter_app/widget/widget_download_dialog.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,8 +12,8 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
   const PexelsVideoPage({super.key});
 
   ///加载更多视频
-  _loadMoreVideo() async {
-    var msg = await controller.loadVideos();
+  _fetchData([bool isRefresh = true]) async {
+    var msg = await controller.fetchVideos(isRefresh);
     if (msg != null) {
       Get.showSnackbar(GetSnackBar(
         backgroundColor: Colors.white,
@@ -31,9 +32,11 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
     var navigator = Navigator.of(Get.context!);
     //显示dialog
     Get.dialog(
-      DownloadDialog(onCancel: (){
-        controller.cancelDownload();
-      },),
+      DownloadDialog(
+        onCancel: () {
+          controller.cancelDownload();
+        },
+      ),
       barrierDismissible: false,
       useSafeArea: false,
     );
@@ -46,18 +49,11 @@ class PexelsVideoPage extends GetWidget<PexelsVideoLogic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (notification) {
-          var pixels = notification.metrics.pixels;
-          var maxScrollExtent = notification.metrics.maxScrollExtent;
-
-          ///这里等于0是因为在没有数据的时候，下拉刷新的时候进行的通知，此时两个都是0。
-          if (maxScrollExtent != 0 &&
-              pixels.toInt() == maxScrollExtent.toInt()) {
-            /// 这里就判定已经滚动到底部了。进行加载下一页数据。
-            _loadMoreVideo();
-          }
-          return false;
+      body: EasyRefresh(
+        refreshOnStart: true,
+        onRefresh: _fetchData,
+        onLoad: () async {
+          await _fetchData(false);
         },
         child: GetBuilder<PexelsVideoLogic>(
             id: controller.videosNotifyId,

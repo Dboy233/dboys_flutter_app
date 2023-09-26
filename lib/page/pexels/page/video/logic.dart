@@ -29,12 +29,6 @@ class PexelsVideoLogic extends GetxController {
   bool _isDownload = false;
 
   @override
-  void onReady() {
-    loadVideos(urlPath: getPexelsVideoPopularFirstPage());
-    super.onReady();
-  }
-
-  @override
   void onClose() {
     _cancelTokenVideo?.cancel();
     _cancelTokenDownload?.cancel();
@@ -42,12 +36,18 @@ class PexelsVideoLogic extends GetxController {
   }
 
   ///加载视频列表 加载下一页的时候不需要船urlPth
-  Future<String?> loadVideos({String? urlPath}) async {
+  Future<String?> fetchVideos([bool isRefresh = true]) async {
     if (_isLoadingVideo) {
       return "正在加载视频列表，请稍后再试。";
     }
     _isLoadingVideo = true;
 
+    String? urlPath;
+    if(isRefresh){
+      urlPath = getPexelsVideoPopularFirstPage();
+      videos.clear();
+      nextPage = null;
+    }
     //地址检测
     var url = urlPath ?? nextPage;
     if (url == null) {

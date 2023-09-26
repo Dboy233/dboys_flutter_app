@@ -104,12 +104,13 @@ class _HomePageState extends State<HomePage> {
                 currentBg = _apps[value].coverImg;
               });
             },
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.only(left: 20.r, right: 20.r),
-              child: AppPage(
-                  key: ValueKey(_apps[index].appName),
-                  homeAppItem: _apps[index]),
-            ),
+            itemBuilder: (context, index) =>
+                Padding(
+                  padding: EdgeInsets.only(left: 20.r, right: 20.r),
+                  child: AppPage(
+                      key: ValueKey(_apps[index].appName),
+                      homeAppItem: _apps[index]),
+                ),
             itemCount: _apps.length,
             controller: PageController(viewportFraction: 0.86, keepPage: true),
           ),
@@ -126,18 +127,43 @@ class AppPage extends StatelessWidget {
 
   const AppPage({Key? key, required this.homeAppItem}) : super(key: key);
 
+
+  List<BoxShadow> _createShadow() {
+    var shadowColor = Colors.blue.withAlpha(50);
+    var shadowSize = 5.0;
+    return [
+      BoxShadow(
+          color: shadowColor,
+          offset: Offset(0, shadowSize),
+          blurRadius: 5),
+      BoxShadow(
+          color: shadowColor,
+          offset: Offset(0, -shadowSize),
+          blurRadius: 5),
+      BoxShadow(
+          color: shadowColor,
+          offset: Offset(shadowSize, 0),
+          blurRadius: 5),
+      BoxShadow(
+          color: shadowColor,
+          offset: Offset(-shadowSize, 0),
+          blurRadius: 5),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
         margin: EdgeInsets.only(top: 350.h, bottom: 350.h),
         width: double.infinity,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                // 这里设置了边缘装饰，但是 SlideImageView的边缘裁切装饰时独立的所以SlideImageView也要设置一样的属性
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10))),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            boxShadow: _createShadow()),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -146,66 +172,69 @@ class AppPage extends StatelessWidget {
               child: SlideImageView(
                 imageProvider: AssetImage(homeAppItem.coverImg),
                 slideDuration: const Duration(seconds: 7),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
+                // borderRadius: const BorderRadius.only(
+                //     topLeft: Radius.circular(10),
+                //     topRight: Radius.circular(10)),
                 enableScanAnim: false,
               ),
             ),
             Expanded(
               flex: 1,
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (homeAppItem.appIcon != null)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 24.r, left: 48.r),
-                            child: Image.asset(
-                              homeAppItem.appIcon!,
-                              width: 200.r,
-                              height: 200.r,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (homeAppItem.appIcon != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 24.r, left: 48.r),
+                              child: Image.asset(
+                                homeAppItem.appIcon!,
+                                width: 200.r,
+                                height: 200.r,
+                              ),
                             ),
                           ),
-                        ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          homeAppItem.appName,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 100.sp,
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            homeAppItem.appName,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 100.sp,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 60.r, right: 60.r),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () => launchUrl(homeAppItem.openUrl),
-                            child: Text('打开网站')),
-                        if (homeAppItem.routerUrl != null)
-                          ElevatedButton(
-                              onPressed: () {
-                                Get.toNamed(homeAppItem.routerUrl!);
-                                // context.navigation.toNamed(Routes.pexels);
-                                // Get.searchDelegate('/').toNamed(Routes.pexels);
-                              },
-                              child: Text('进入App'))
+                        )
                       ],
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(left: 60.r, right: 60.r),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () => launchUrl(homeAppItem.openUrl),
+                              child: Text('打开网站')),
+                          if (homeAppItem.routerUrl != null)
+                            ElevatedButton(
+                                onPressed: () {
+                                  Get.toNamed(homeAppItem.routerUrl!);
+                                  // context.navigation.toNamed(Routes.pexels);
+                                  // Get.searchDelegate('/').toNamed(Routes.pexels);
+                                },
+                                child: Text('进入App'))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

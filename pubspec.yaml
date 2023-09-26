@@ -69,6 +69,7 @@ dependencies:
   amap_flutter_base: ^3.0.0 #基础库
   amap_flutter_map: ^3.0.0 #地图库
   amap_flutter_location: ^3.0.0 #定位库
+  easy_refresh: ^3.3.2+1
 
 dev_dependencies:
   flutter_test:

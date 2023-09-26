@@ -11,7 +11,7 @@ class PexelsPhotoLogic extends GetxController {
   final String photoListNotifyId = "photoList";
 
   //下一页网络请求地址
-  String? nextPage = null;
+  String? nextPage;
 
   //网路操作取消token
   CancelToken? _cancelTokenPhoto;
@@ -25,12 +25,6 @@ class PexelsPhotoLogic extends GetxController {
   ///判断是否正在加载数据，放置重复加载
   var _isLoading = false;
 
-  @override
-  void onReady() {
-    //加载精选照片,当逻辑层第一次加载的时候请求第一页
-    loadPhoto(urlPath: getPexelsPhotosFirstPage());
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -39,11 +33,19 @@ class PexelsPhotoLogic extends GetxController {
   }
 
   ///加载图片
-   Future<String?> loadPhoto({String? urlPath}) async {
+  Future<String?> loadPhoto([bool isRefresh = true]) async {
     if (_isLoading) {
-      return"正在加载更多，请稍后。。。";
+      return "正在加载更多，请稍后。。。";
     }
     _isLoading = true;
+    String? urlPath;
+
+    if (isRefresh) {
+      urlPath = getPexelsPhotosFirstPage();
+      nextPage = null;
+      photoList.clear();
+    }
+
     //判断url
     String? url = urlPath ?? nextPage;
     if (url == null) {
@@ -64,10 +66,9 @@ class PexelsPhotoLogic extends GetxController {
       }
       return "请求数据失败了";
     }
-
   }
 
-  void cancelDownloadPhoto(){
+  void cancelDownloadPhoto() {
     _cancelTokenDownload?.cancel("取消下载图片");
   }
 
@@ -112,7 +113,8 @@ class PexelsPhotoLogic extends GetxController {
 
     //开始下载
     var result = await PexelsApi.downloadPhoto(
-        saveName, downloadUrl, _cancelTokenDownload!).onError((error, stackTrace) => false);
+            saveName, downloadUrl, _cancelTokenDownload!)
+        .onError((error, stackTrace) => false);
 
     //修改下载状态
     _isDownload = false;

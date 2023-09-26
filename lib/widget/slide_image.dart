@@ -6,9 +6,6 @@ class SlideImageView extends StatelessWidget {
   ///图片加载器
   final ImageProvider imageProvider;
 
-  ///边框
-  final BorderRadiusGeometry borderRadius;
-
   ///滑动时长
   final Duration slideDuration;
 
@@ -25,7 +22,6 @@ class SlideImageView extends StatelessWidget {
   const SlideImageView({
     Key? key,
     required this.imageProvider,
-    this.borderRadius = BorderRadius.zero,
     this.slideDuration = const Duration(seconds: 5),
     this.scaleDuration = const Duration(seconds: 1),
     this.enableScanAnim = true,
@@ -43,7 +39,6 @@ class SlideImageView extends StatelessWidget {
             imageProvider,
             constraint.maxWidth,
             constraint.maxHeight,
-            borderRadius,
             slideDuration,
             scaleDuration,
             enableScanAnim,
@@ -66,9 +61,6 @@ class _ImageView extends StatefulWidget {
 //图片加载器
   final ImageProvider imageProvider;
 
-  //边框
-  final BorderRadiusGeometry borderRadius;
-
   //滚动时长
   final Duration slideDuration;
 
@@ -85,7 +77,6 @@ class _ImageView extends StatefulWidget {
     this.imageProvider,
     this.layoutWidth,
     this.layoutHeight,
-    this.borderRadius,
     this.slideDuration,
     this.scaleDuration,
     this.enableScanAnim,
@@ -183,24 +174,21 @@ class _ImageViewState extends State<_ImageView> with TickerProviderStateMixin {
     //初始化缩放控制器
     _initAnimationController();
 
-    return ClipRRect(
-      borderRadius: widget.borderRadius,
-      child: ScaleTransition(
-        //缩放动画
-        scale: Tween<double>(
-          begin: widget.enableScanAnim ? 1 : maxScale,
-          end: maxScale,
-        ).animate(_scaleController!),
-        child: SlideTransition(
-          //平移动画
-          position: Tween(
-            begin: offsetBegin,
-            end: offsetEnd,
-          ).animate(_slideController!),
-          child: Image(
-            image: widget.imageProvider,
-            fit: BoxFit.contain,
-          ),
+    return ScaleTransition(
+      //缩放动画
+      scale: Tween<double>(
+        begin: widget.enableScanAnim ? 1 : maxScale,
+        end: maxScale,
+      ).animate(_scaleController!),
+      child: SlideTransition(
+        //平移动画
+        position: Tween(
+          begin: offsetBegin,
+          end: offsetEnd,
+        ).animate(_slideController!),
+        child: Image(
+          image: widget.imageProvider,
+          fit: BoxFit.contain,
         ),
       ),
     );

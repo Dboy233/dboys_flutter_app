@@ -39,7 +39,7 @@ class AppPages {
           name: _Paths.pexels,
           transition: Transition.cupertino,
           binding: PexelsBinding(),
-          page: () => PexelsPage(),
+          page: () => const PexelsPage(),
           children: [
             GetPage(
               name: _Paths.pexels_video + _Paths.pexels_video_watch,

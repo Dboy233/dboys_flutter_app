@@ -1,5 +1,6 @@
 import 'package:dboy_flutter_app/page/photo_review/view.dart';
 import 'package:dboy_flutter_app/widget/widget_download_dialog.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,10 +11,18 @@ class PexelsPhotoPage extends GetWidget<PexelsPhotoLogic> {
   const PexelsPhotoPage({super.key});
 
   //加载图片
-  void _loadPhoto() async {
-    String? msg = await controller.loadPhoto();
+  Future<dynamic> _loadPhoto() async {
+    String? msg = await controller.loadPhoto(false);
     if (msg != null) {
       _showMsg(msg);
+    }
+  }
+
+  //
+  Future<dynamic> _refreshPhoto() async {
+    var s = await controller.loadPhoto(true);
+    if (s != null) {
+      _showMsg(s);
     }
   }
 
@@ -50,24 +59,14 @@ class PexelsPhotoPage extends GetWidget<PexelsPhotoLogic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NotificationListener<ScrollEndNotification>(
-        onNotification: (notification) {
-          var pixels = notification.metrics.pixels;
-          var maxScrollExtent = notification.metrics.maxScrollExtent;
-
-          ///这里等于0是因为在没有数据的时候，下拉刷新的时候进行的通知，此时两个都是0。
-          if (maxScrollExtent != 0 &&
-              pixels.toInt() == maxScrollExtent.toInt()) {
-            ///这里就判定已经滚动到底部了。进行加载下一页数据。
-            _loadPhoto();
-          }
-          return false;
-        },
+      body: EasyRefresh(
+        refreshOnStart: true,
+        onRefresh:  _refreshPhoto,
+        onLoad: _loadPhoto,
         child: GetBuilder<PexelsPhotoLogic>(
           id: controller.photoListNotifyId,
           builder: (_) {
             return ListView.builder(
-              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return PhotoItemWidget(
                   photo: controller.photoList[index],
