@@ -30,10 +30,11 @@ class _QrPageState extends State<QrPage> {
   ///判断是否已经展示弹窗结果了
   bool isShowResult = false;
 
-  //二维码结果,展示二维码结果，然后保存到数据库中.如果扫描到了多个二维码，会多次调用这个函数，头疼妈的
+  //二维码结果,展示二维码结果，然后保存到数据库中.
   _onDetect(BarcodeCapture barcodeCapture) async {
-    var barcode = barcodeCapture.barcodes[0];
-    logic.addBar(barcode);
+    for (var barcode in barcodeCapture.barcodes) {
+      logic.addBar(barcode);
+    }
     if (isShowResult) {
       return;
     }
